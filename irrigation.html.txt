@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head><title>Smart Irrigation</title></head>
+<body>
+    <h2>Irrigation Advisor</h2>
+    <form method="post">
+        Moisture Level (%): <input type="number" name="moisture" required><br>
+        Crop Type: <input type="text" name="crop" required><br>
+        Temperature (°C): <input type="number" name="temp" required><br>
+        Humidity (%): <input type="number" name="humidity" required><br>
+        <button type="submit">Get Advice</button>
+    </form>
+
+    {% if result %}
+        <h3>Advice: {{ result }}</h3>
+    {% endif %}
+</body>
+</html>

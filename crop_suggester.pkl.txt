@@ -1,0 +1,21 @@
+# train_crop_suggester.py
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+import joblib
+
+data = {
+    'soil_type': [0, 1, 2, 3, 4],
+    'season': [0, 1, 0, 1, 0],
+    'crop': ['Rice', 'Wheat', 'Millets', 'Jute', 'Tea']
+}
+
+df = pd.DataFrame(data)
+
+X = df[['soil_type', 'season']]
+y = df['crop']
+
+model = RandomForestClassifier()
+model.fit(X, y)
+
+joblib.dump(model, 'models/crop_suggester.pkl')
+print("crop_suggester.pkl saved.")

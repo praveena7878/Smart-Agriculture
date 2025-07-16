@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Soil Detection</title></head>
+<body>
+    <h2>Soil Type Detection</h2>
+    <form method="post">
+        Nitrogen (N): <input type="number" name="N" required><br>
+        Phosphorous (P): <input type="number" name="P" required><br>
+        Potassium (K): <input type="number" name="K" required><br>
+        pH: <input type="number" step="0.1" name="ph" required><br>
+        <button type="submit">Detect</button>
+    </form>
+
+    {% if submitted %}
+        <h3>Detected Soil Type: {{ soil }}</h3>
+        <h4>Suggested Crop: {{ crop }}</h4>
+    {% endif %}
+</body>
+</html>

@@ -1,0 +1,109 @@
+from flask import Flask, render_template, request, redirect, url_for
+from modules.soil_detection import detect_soil_type
+from modules.crop_disease_detection import detect_disease
+from modules.irrigation_recommender import recommend_irrigation
+from modules.seed_crop_suggester import suggest_crop
+from modules.yield_tracker import predict_yield
+from modules.sms_alerts import send_sms
+from modules.season_detector import get_season
+from modules.market_price import get_market_price
+from modules.loan_scheme_assistant import get_scheme_info
+from modules.language_translator import translate_text
+
+import os
+
+app = Flask(__name__)
+UPLOAD_FOLDER = 'static/images'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# Soil Detection Page
+@app.route('/soil', methods=['GET', 'POST'])
+def soil():
+    if request.method == 'POST':
+        N = float(request.form['N'])
+        P = float(request.form['P'])
+        K = float(request.form['K'])
+        ph = float(request.form['ph'])
+
+        soil_type = detect_soil_type(N, P, K, ph)
+        season = get_season()
+        crop_suggestion = suggest_crop(soil_type, season)
+
+        return render_template('soil_detection.html', soil=soil_type, crop=crop_suggestion, submitted=True)
+    return render_template('soil_detection.html', submitted=False)
+
+# Crop Disease Detection Page
+@app.route('/disease', methods=['GET', 'POST'])
+def disease():
+    if request.method == 'POST':
+        file = request.files['leaf_image']
+        filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
+        file.save(filepath)
+
+        disease_name, confidence = detect_disease(filepath)
+        return render_template('crop_disease.html', result=True, disease=disease_name, confidence=confidence)
+    return render_template('crop_disease.html', result=False)
+
+# Irrigation Page
+@app.route('/irrigation', methods=['GET', 'POST'])
+def irrigation():
+    if request.method == 'POST':
+        moisture = float(request.form['moisture'])
+        crop = request.form['crop']
+        temp = float(request.form['temperature'])
+        humidity = float(request.form['humidity'])
+
+        recommendation = recommend_irrigation(moisture, crop, temp, humidity)
+        return render_template('irrigation.html', result=True, recommendation=recommendation)
+    return render_template('irrigation.html', result=False)
+
+# Yield Prediction
+@app.route('/yield', methods=['GET', 'POST'])
+def yield_tracker_route():
+    if request.method == 'POST':
+        area = float(request.form['area'])
+        rainfall = float(request.form['rainfall'])
+        fertilizer = float(request.form['fertilizer'])
+        crop = request.form['crop']
+
+        yield_value = predict_yield(area, rainfall, fertilizer, crop)
+        return render_template('yield_tracker.html', result=True, yield_val=yield_value)
+    return render_template('yield_tracker.html', result=False)
+
+# Market Price Info
+@app.route('/market', methods=['GET', 'POST'])
+def market():
+    if request.method == 'POST':
+        crop = request.form['crop']
+        price = get_market_price(crop)
+        return render_template('market_price.html', result=True, price=price)
+    return render_template('market_price.html', result=False)
+
+# Loan/Scheme Info
+@app.route('/loans')
+def loans():
+    schemes = get_scheme_info()
+    return render_template('loans.html', schemes=schemes)
+
+# Language Translate
+@app.route('/translate', methods=['POST'])
+def translate():
+    text = request.form['text']
+    lang = request.form['lang']
+    translated = translate_text(text, dest_lang=lang)
+    return render_template('translate_result.html', original=text, translated=translated)
+
+# Send SMS
+@app.route('/alert', methods=['POST'])
+def alert():
+    number = request.form['phone']
+    message = request.form['message']
+    sid = send_sms(message, number)
+    return f"Message sent! SID: {sid}"
+
+if __name__ == '__main__':
+    app.run(debug=True)

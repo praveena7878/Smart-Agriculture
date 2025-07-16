@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Smart Agriculture Home</title>
+</head>
+<body>
+    <h1>🌾 Welcome to Smart Agriculture System 🌿</h1>
+    <ul>
+        <li><a href="/soil">Soil Detection</a></li>
+        <li><a href="/disease">Crop Disease Detection</a></li>
+        <li><a href="/irrigation">Irrigation Advice</a></li>
+        <li><a href="/yield">Yield Prediction</a></li>
+        <li><a href="/sms">Send SMS Alert</a></li>
+        <li><a href="/market">Market Price Info</a></li>
+        <li><a href="/loans">Loan & Schemes</a></li>
+        <li><a href="/translate">Language Translation</a></li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head><title>Crop Disease Detection</title></head>
+<body>
+    <h2>Upload Crop Leaf Image</h2>
+    <form method="post" enctype="multipart/form-data">
+        <input type="file" name="leaf_image" accept="image/*" required><br>
+        <button type="submit">Detect Disease</button>
+    </form>
+
+    {% if result %}
+        <h3>Disease: {{ disease }}</h3>
+        <h4>Confidence: {{ confidence }}%</h4>
+    {% endif %}
+</body>
+</html>

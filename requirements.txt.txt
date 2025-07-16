@@ -1,0 +1,7 @@
+Flask
+tensorflow
+joblib
+scikit-learn
+pandas
+twilio
+googletrans==4.0.0rc1
